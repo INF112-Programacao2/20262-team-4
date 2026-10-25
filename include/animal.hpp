@@ -19,6 +19,7 @@ class Animal {
                int idade, std::string porte, std::string caracteristicaPrincipal, std::string status);
         ~Animal();
 
+        int getCodigo() const;
         std::string getNome() const;
         std::string getEspecie() const;
         std::string getRaca() const;
@@ -27,6 +28,7 @@ class Animal {
         std::string getCaracteristicaPrincipal() const;
         std::string getStatus() const;
         
+        void setCodigo(int codigo);
         void setNome(std::string nome);
         void setEspecie(std::string especie);
         void setRaca(std::string raca);
