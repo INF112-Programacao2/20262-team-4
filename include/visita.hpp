@@ -1,7 +1,6 @@
 #ifndef VISITA_HPP
 #define VISITA_HPP
 #include <string>
-#include <vector>
 
 class Visita {
 private:
@@ -17,8 +16,6 @@ public:
     void marcarComoRealizada();
     void listarHorariosDisponiveis();
     void definirOpcoesPadrao();
-    //bool verificarDisponibilidade(std::string dataVisita, std::string horarioVisita);
-
 
     //getters e setters
     int getCodigo() const;
@@ -32,7 +29,6 @@ public:
 
     std::string getStatus() const;
     void setStatus(std::string novoStatus);
-
 };
 
 #endif
