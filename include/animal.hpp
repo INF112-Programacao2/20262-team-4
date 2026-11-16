@@ -1,10 +1,10 @@
 #ifndef ANIMAL_HPP
 #define ANIMAL_HPP
 
-#include<string>
+#include <string>
 
 class Animal {
-    private: 
+    private:
         int codigo;
         std::string nome;
         std::string especie;
@@ -15,8 +15,14 @@ class Animal {
         std::string status;
 
     public:
-        Animal(int codigo, std::string nome, std::string especie, std::string raca, 
-               int idade, std::string porte, std::string caracteristicaPrincipal, std::string status);
+        static const std::string DISPONIVEL;
+        static const std::string EM_TRATAMENTO;
+        static const std::string EM_PROCESSO_ADOCAO;
+        static const std::string ADOTADO;
+
+        Animal(int codigo, std::string nome, std::string especie, std::string raca,
+               int idade, std::string porte, std::string caracteristicaPrincipal,
+               std::string status);
         ~Animal();
 
         int getCodigo() const;
@@ -27,7 +33,7 @@ class Animal {
         std::string getPorte() const;
         std::string getCaracteristicaPrincipal() const;
         std::string getStatus() const;
-        
+
         void setCodigo(int codigo);
         void setNome(std::string nome);
         void setEspecie(std::string especie);
@@ -37,7 +43,11 @@ class Animal {
         void setCaracteristicaPrincipal(std::string caracteristica);
         void setStatus(std::string status);
 
-        void forneceDados() const;
+        static bool statusValido(const std::string &status);
+
+        void fornecerDados() const;
+        void atualizarStatus(std::string novoStatus);
+        bool estaDisponivelParaAdocao() const;
 };
 
 #endif
