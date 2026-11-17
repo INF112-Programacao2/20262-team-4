@@ -1,6 +1,6 @@
 #ifndef DOACAO_HPP
 #define DOACAO_HPP
-#include<string>
+#include <string>
 
 class Doacao{
     private: 
@@ -17,6 +17,9 @@ class Doacao{
         double getValor() const;
         std::string getData() const;
 
+        static void VisualizarHistorico();
+        
+        void RegistrarContribuicao() const;
         void EmitirRecibo() const;
 };
 
