@@ -74,12 +74,12 @@ bool HistoricoVazio() {
 void ValidarValor(double &valor){
     while(true){
         try{
-            // Lança uma excessao se o valor for <= 0
+            // Lança uma exceção se o valor for <= 0
             if(valor <= 0)
                 throw std::invalid_argument("Valor nao pode ser igual a 0 ou negativo");
 
             break;
-        // Captura a exceção, exibe a mensagem e solicita um novo valor
+        // Captura a exceção, exibe a mensagem e solicita a inserção de um novo valor
         }catch(const std::invalid_argument &e){
             std::cout << e.what() << std::endl;
             std::cout << "Digite outro valor: ";
@@ -108,7 +108,7 @@ void ValidarData(std::string &data){
 
 // Construtor da classe Doacao
 Doacao::Doacao(double valor, std::string data) {
-    // Verifica se o valor e data inseridos são válidos
+    // Verifica se o valor e a data inseridos são válidos
     ValidarValor(valor);
     ValidarData(data);
 
@@ -219,7 +219,7 @@ void Doacao::VisualizarHistorico() {
 
     // Percorre o arquivo para localizar os códigos e valores das doações
     while(leitura >> palavra) {
-        // Conta a quantidade de doacoes registradas
+        // Conta a quantidade de doações registradas
         if(palavra == "CODIGO:") {
             quantidade++;
         }
