@@ -79,7 +79,7 @@ void ValidarValor(double &valor){
                 throw std::invalid_argument("Valor nao pode ser igual a 0 ou negativo");
 
             break;
-        // Captura a exceção, exibe a mensagem e solicita a inserção de um novo valor
+        // Captura a exceção, exibe a mensagem e solicita um novo valor
         }catch(const std::invalid_argument &e){
             std::cout << e.what() << std::endl;
             std::cout << "Digite outro valor: ";
@@ -106,15 +106,81 @@ void ValidarData(std::string &data){
     }
 }
 
-// Construtor da classe Doacao
+// Verifica se o item da doação foi informado
+void ValidarItem(std::string &item){
+    while(true){
+        try{
+            // Lança uma exceção caso o item esteja vazio
+            if(item.empty())
+                throw std::invalid_argument("O item nao pode ser vazio!");
+
+            break;
+        // Captura a exceção, exibe a mensagem e solicita um novo item
+        }catch(const std::invalid_argument &e){
+            std::cout << e.what() << std::endl;
+            std::cout << "Digite outro item: ";
+            std::getline(std::cin >> std::ws, item);
+        }
+    }
+}
+
+// Verifica se a quantidade de itens doados é válida
+void ValidarQuantidade(int &quantidade){
+    while(true){
+        try{
+            // Lança uma exceção se a quantidade for <= 0
+            if(quantidade <= 0)
+                throw std::invalid_argument("Quantidade nao pode ser igual a 0 ou negativo");
+
+            break;
+        // Captura a exceção, exibe a mensagem e solicita uma nova quantidade
+        }catch(const std::invalid_argument &e){
+            std::cout << e.what() << std::endl;
+            std::cout << "Digite outra quantidade: ";
+            std::cin >> quantidade;
+        }
+    }
+}
+
+// Construtor para doações monetárias
 Doacao::Doacao(double valor, std::string data) {
-    // Verifica se o valor e a data inseridos são válidos
+    // Verifica se o valor e data inseridos são válidos
     ValidarValor(valor);
     ValidarData(data);
 
     // Atribui os dados validados aos atributos da classe
     this->valor = valor;
     this->data = data;
+    // Inicializa os atributos que não serão utilizados nesta doação
+    this->item = "";
+    this->quantidade = 0;
+
+    this->monetaria = true;
+
+    // Atualiza o código com base no histórico de doações
+    AtualizarCodigo(codigo);
+
+    // Gera o próximo código da doação
+    codigo++;
+    this->codigoDoacao = codigo;
+}
+
+// Construtor para doações materiais
+Doacao::Doacao(std::string item, int quantidade, std::string data) {
+    // Verifica se o item, a quantidade e a data informados são válidos
+    ValidarItem(item);
+    ValidarQuantidade(quantidade);
+    ValidarData(data);
+
+    // Atribui os dados validados aos atributos da classe
+    this->item = item;
+    this->quantidade = quantidade;
+    this->data = data;
+
+    // Inicializa o atributo que não será utilizado nesta doação
+    this->valor = 0;
+
+    this->monetaria = false;
 
     // Atualiza o código com base no histórico de doações
     AtualizarCodigo(codigo);
@@ -139,6 +205,14 @@ std::string Doacao::getData() const {
     return data;
 }
 
+std::string Doacao::getItem() const {
+    return item;
+}
+
+int Doacao::getQuantidade() const {
+    return quantidade;
+}
+
 // Registra uma nova doação no arquivo de histórico
 void Doacao::RegistrarContribuicao() const{
     // Verifica se o arquivo de histórico está vazio
@@ -156,13 +230,24 @@ void Doacao::RegistrarContribuicao() const{
         historico << std::endl;
     }
 
-    // Registra o código, o valor e a data da doação
     historico << "CODIGO: " << std::setw(3) << std::setfill('0') << codigoDoacao << std::endl;
-    historico << "VALOR: " << valor << std::endl;
+
+    // Registra as informações específicas de uma doação monetária
+    if(monetaria) {
+        historico << "TIPO: MONETARIA" << std::endl;
+        historico << "VALOR: " << valor << std::endl;
+    }
+
+    // Registra as informações específicas de uma doação material
+    if(!monetaria) {
+        historico << "TIPO: MATERIAL" << std::endl;
+        historico << "ITEM: " << item << std::endl;
+        historico << "QUANTIDADE: " << quantidade << std::endl;
+    }
+
     historico << "DATA: " << data << std::endl;
     historico << std::endl;
-
-    // Fecha o arquivo
+    
     historico.close();
 
     std::cout << "Doacao registrada com sucesso!" << std::endl;
@@ -179,11 +264,23 @@ void Doacao::EmitirRecibo() const {
     if(!recibo.is_open())
             throw std::runtime_error("Erro ao criar o recibo de doacoes");
 
-    // Escreve os dados da doação no recibo
+    // Escreve o cabeçalho do recibo
     recibo << "------- RECIBO DA DOACAO -------\n";
-    recibo << "CODIGO:  " <<  std::setw(3) << std::setfill('0') << codigoDoacao << std::endl;
-    recibo << "VALOR:   " <<  valor << std::endl;
-    recibo << "DATA:    " <<  data << std::endl;
+    recibo << "CODIGO: " << std::setw(3) << std::setfill('0') << codigoDoacao << std::endl;
+
+    // Escreve as informações de acordo com o tipo da doação
+    if(monetaria) {
+        recibo << "TIPO: MONETARIA" << std::endl;
+        recibo << "VALOR: R$ " << valor << std::endl;
+    }
+
+    if(!monetaria) {
+        recibo << "TIPO: MATERIAL" << std::endl;
+        recibo << "ITEM: " << item << std::endl;
+        recibo << "QUANTIDADE: " << quantidade << std::endl;
+    }
+
+    recibo << "DATA: " << data << std::endl;
     recibo << "--------------------------------\n";
 
     recibo.close();
@@ -204,6 +301,7 @@ void Doacao::VisualizarHistorico() {
     while(std::getline(historico, linha)) {
         std::cout << linha << std::endl;
     }
+
     historico.close();
 
     // Abre novamente o arquivo para calcular o total arrecadado
@@ -215,16 +313,9 @@ void Doacao::VisualizarHistorico() {
     std::string palavra;
     double valorLido;
     double total = 0;
-    int quantidade = 0;
 
-    // Percorre o arquivo para localizar os códigos e valores das doações
+    // Percorre o arquivo para localizar os valores das doações monetárias
     while(leitura >> palavra) {
-        // Conta a quantidade de doações registradas
-        if(palavra == "CODIGO:") {
-            quantidade++;
-        }
-
-        // Soma os valores das doações para calcular o total arrecadado
         if(palavra == "VALOR:") {
             leitura >> valorLido;
             total += valorLido;
@@ -233,11 +324,6 @@ void Doacao::VisualizarHistorico() {
 
     leitura.close();
 
-   // Verifica se existem doações registradas no histórico
-    if(quantidade == 0) {
-        std::cout << "Nenhuma doacao registrada." << std::endl;
-    }
-    else {
-        std::cout << "\nTotal arrecadado: R$ " << total << std::endl;
-    }
+   // Exibe o total arrecadado, mesmo que não existam doações monetárias
+    std::cout << "\nTotal arrecadado em dinheiro: R$ " << total << std::endl;
 }
