@@ -210,7 +210,7 @@ void RegistroMedico::exibirRegistro(int codigoAnimal){
             if(codigoAnimalLido == codigoAnimal){
                 encontrou = true;
 
-                std::cout << "\nCODIGO: " << codigoLido << std::endl;
+                std::cout << "\nCODIGO: " << std::setw(3) << std::setfill('0') << codigoLido << std::endl;
                 std::cout << "CODIGO ANIMAL: " << codigoAnimalLido << std::endl;
                 std::cout << "DATA: " << dataLida << std::endl;
                 std::cout << "DESCRICAO:" << tratamentoLido << std::endl;
