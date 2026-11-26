@@ -1,34 +1,48 @@
 #ifndef VISITA_HPP
 #define VISITA_HPP
 #include <string>
+#include "animal.hpp"
+
+enum class StatusVisita{
+    AGENDADA,
+    CONFIRMADA,
+    REALIZADA,
+    CANCELADA
+};
 
 class Visita {
 private:
-    int codigo;
-    std::string dataVisita;
-    std::string horarioVisita;
-    std::string status;
+    int _codigo;
+    std::string _nomeVisitante;
+    std::string _dataVisita;
+    std::string _horarioVisita;
+    StatusVisita _status;
+    Animal* _animal;                  //aponta para Animal, nullptr se for uma visita geral
 public:
-    Visita(int codigo, std::string dataVisita, std::string status, std::string horarioVisita);
-    ~Visita();
+    //construtor para NOVAS VISITAS criadas no sistema:
+    Visita(int codigo, const std::string& nomeVisitante,const std::string& dataVisita, const std::string& horarioVisita, Animal* animal = nullptr);
+    //construtor para carregar visitas ja existentes(via arquivo .txt)
+    Visita(int codigo, const std::string& nomeVisitante, const std::string& dataVisita, const std::string& horarioVisita, StatusVisita statusInicial, Animal* animal = nullptr);
+    //transicoes de estado
     void confirmarAgendamento();
     void cancelarVisita();
     void marcarComoRealizada();
-    void listarHorariosDisponiveis();
-    void definirOpcoesPadrao();
 
     //getters e setters
     int getCodigo() const;
-    void setCodigo(int novoCodigo);
+
+    std::string getNomeVisitante() const;
 
     std::string getDataVisita()const;
-    void setDataVisita(std::string novaData);
+    void setDataVisita(const std::string& novaData);
 
     std::string getHorarioVisita()const;
-    void setHorarioVisita(std::string novoHorario);
+    void setHorarioVisita(const std::string& novoHorario);
 
-    std::string getStatus() const;
-    void setStatus(std::string novoStatus);
+    StatusVisita getStatus() const;
+    std::string getStatusTexto() const;
+
+    Animal* getAnimal() const;
 };
 
 #endif
