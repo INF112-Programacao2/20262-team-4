@@ -24,3 +24,6 @@ RegistroNaoEncontradoException::RegistroNaoEncontradoException(const std::string
 
 LimiteFavoritosException::LimiteFavoritosException(int limite)
     : AbrigoException("Limite de " + std::to_string(limite) + " favoritos atingido") {}
+
+AdocaoOperacaoInvalidaException::AdocaoOperacaoInvalidaException(const std::string &operacao, const std::string &status)
+    : AbrigoException("Nao e possivel "+operacao+" uma adocao com status '"+status+"'"){}

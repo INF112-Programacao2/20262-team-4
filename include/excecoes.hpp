@@ -45,4 +45,10 @@ class LimiteFavoritosException : public AbrigoException {
         explicit LimiteFavoritosException(int limite);
 };
 
+// operacao (registrar, aprovar, recusar, cancelar) nao permitida para o status atual da ADOCAO
+class AdocaoOperacaoInvalidaException : public AbrigoException{
+public:
+    explicit AdocaoOperacaoInvalidaException(const std::string &operacao, const std::string &Status);
+};
+
 #endif

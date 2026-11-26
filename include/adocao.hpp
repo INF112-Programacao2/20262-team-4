@@ -11,14 +11,14 @@ class Animal;
 class Adocao{
 private:
     int _codigo;
-    std::string dataSolicitacao;
-    std::string dataAvaliacao;
-    std::string status;
-    std::string justificativa;
+    std::string _dataSolicitacao;
+    std::string _dataAvaliacao;
+    std::string _status;
+    std::string _justificativa;
 
-    Usuario* solicitante; // user que solicita adocao
-    Funcionario* avaliador; // funcionario que avalia o processo de adocao
-    Animal* animal; // animal a ser adotado
+    Usuario* _solicitante; // user que solicita adocao
+    Funcionario* _avaliador; // funcionario que avalia o processo de adocao
+    Animal* _animal; // animal a ser adotado
 
 public:
     Adocao(int codigo); //possui apenas (codigo) pois os demais dados so sao conhecidos posteriormente
